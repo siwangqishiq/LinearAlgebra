@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="app_name">线性代数</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">线性代数</string>
+
+</resources>
