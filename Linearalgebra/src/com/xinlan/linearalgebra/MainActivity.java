@@ -4,6 +4,7 @@ import com.xinlan.linearalgebra.core.XinlanMatrix;
 
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -12,8 +13,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 
 public class MainActivity extends Activity {
 	private TextView content;
@@ -23,6 +27,7 @@ public class MainActivity extends Activity {
 	private Button compute;
 
 	private MyTextEdit[][] inputs;
+	private int row,col;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +40,10 @@ public class MainActivity extends Activity {
 		compute = (Button) findViewById(R.id.compute);
 		resetMatrixBtn.setOnClickListener(new ReSetMatrix());
 		compute.setOnClickListener(new DoTransform());
-
-		reSet(3, 4);
+		
+		row=3;
+		col=4;
+		reSet(row, col);
 	}
 
 	private void reSet(int m, int n) {
@@ -91,6 +98,41 @@ public class MainActivity extends Activity {
 	private final class ReSetMatrix implements OnClickListener {
 		@Override
 		public void onClick(View v) {
+			LayoutInflater inflater = getLayoutInflater();
+			   View layout = inflater.inflate(R.layout.input,
+			    null);
+
+			   new AlertDialog.Builder(mContext).setTitle("请您输入新矩阵的行数与列数").setView(layout)
+			     .setPositiveButton("确定", new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						 AlertDialog ad = (AlertDialog)dialog;
+						 EditText rowText = (EditText)ad.findViewById(R.id.rowNum);
+						 EditText colText = (EditText)ad.findViewById(R.id.colNum);
+						 
+						 try{
+							 row = Integer.parseInt(rowText.getText().toString().trim());
+							 col = Integer.parseInt(colText.getText().toString().trim());
+						 }catch(Exception e){
+							 Toast.makeText(mContext, "输入非法!", Toast.LENGTH_LONG).show();
+							 return;
+						 }
+						 
+						 if(row<=0 || col <=0){
+							 Toast.makeText(mContext, "输入非法!", Toast.LENGTH_LONG).show();
+							 return;
+						 }
+						 
+						 if(row>col){
+							 Toast.makeText(mContext, "程序目前只支持m<=n形式的矩阵，请将矩阵转置.", Toast.LENGTH_LONG).show();
+							 return;
+						 }
+						 
+						 reSet(row, col);
+					}
+			    	 
+			     })
+			     .setNegativeButton("取消", null).show();
 			
 		}
 	}// end inner class
@@ -104,7 +146,12 @@ public class MainActivity extends Activity {
 			XinlanMatrix matrix = new XinlanMatrix();
 			matrix.setData(data);
 			matrix.toLadderMatrix();
-			content.setText("阶梯矩阵:\n"+matrix.showString());
+			String str1 = "阶梯矩阵:\n"+matrix.showString()+"\n\n";
+			
+			boolean isRight = matrix.toRowSimplestMatrix();
+			String str2 = "行最简矩阵:\n"+(isRight?matrix.showString():matrix.showString());
+			
+			content.setText(str1+str2);
 		}
 	}// end inner class
 }// end class

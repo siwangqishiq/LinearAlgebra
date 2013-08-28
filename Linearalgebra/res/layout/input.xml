@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+	<EditText
+	    android:id="@+id/rowNum"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:singleLine="true"
+	    android:numeric="integer"
+	    android:hint="矩阵行数"
+	    />
+	<EditText
+	    android:id="@+id/colNum"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:singleLine="true"
+	    android:numeric="integer"
+	    android:hint="矩阵列数"
+	    />
+</LinearLayout>
